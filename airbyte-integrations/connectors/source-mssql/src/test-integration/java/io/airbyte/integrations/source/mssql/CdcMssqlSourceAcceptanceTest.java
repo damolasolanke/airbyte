@@ -115,17 +115,16 @@ public class CdcMssqlSourceAcceptanceTest extends SourceAcceptanceTest {
         .with("INSERT INTO %s.%s (id, name) VALUES (1,'picard'),  (2, 'crusher'), (3, 'vash');", SCHEMA_NAME, STREAM_NAME)
         .with("INSERT INTO %s.%s (id, name) VALUES (1,'enterprise-d'),  (2, 'defiant'), (3, 'yamato');", SCHEMA_NAME, STREAM_NAME2)
         // enable cdc on tables for designated role
-        .with(enableCdcSqlFmt, SCHEMA_NAME, STREAM_NAME, CDC_ROLE_NAME)
-        .with(enableCdcSqlFmt, SCHEMA_NAME, STREAM_NAME2, CDC_ROLE_NAME)
-        .withShortenedCapturePollingInterval()
-        .withWaitUntilMaxLsnAvailable()
+        .withCdcForTable(SCHEMA_NAME, STREAM_NAME, CDC_ROLE_NAME)
+        .withCdcForTable(SCHEMA_NAME, STREAM_NAME2, CDC_ROLE_NAME)
         // revoke user permissions
         .with("REVOKE ALL FROM %s CASCADE;", testdb.getUserName())
         .with("EXEC sp_msforeachtable \"REVOKE ALL ON '?' TO %s;\"", testdb.getUserName())
         // grant user permissions
         .with("EXEC sp_addrolemember N'%s', N'%s';", "db_datareader", testdb.getUserName())
         .with("GRANT SELECT ON SCHEMA :: [cdc] TO %s", testdb.getUserName())
-        .with("EXEC sp_addrolemember N'%s', N'%s';", CDC_ROLE_NAME, testdb.getUserName());
+        .with("EXEC sp_addrolemember N'%s', N'%s';", CDC_ROLE_NAME, testdb.getUserName())
+        .withWaitUntilMaxLsnAvailable();
   }
 
   @Override
