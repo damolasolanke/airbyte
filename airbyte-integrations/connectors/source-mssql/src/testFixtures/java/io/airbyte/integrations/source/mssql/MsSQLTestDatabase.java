@@ -40,7 +40,6 @@ public class MsSQLTestDatabase extends TestDatabase<MSSQLServerContainer<?>, MsS
   public enum BaseImage {
 
     MSSQL_2022("mcr.microsoft.com/mssql/server:2022-latest"),
-    MSSQL_2017("mcr.microsoft.com/mssql/server:2017-latest"),
     ;
 
     public final String reference;
@@ -53,9 +52,6 @@ public class MsSQLTestDatabase extends TestDatabase<MSSQLServerContainer<?>, MsS
 
   public enum ContainerModifier implements NamedContainerModifier<MSSQLServerContainer<?>> {
 
-    NETWORK(MsSQLContainerFactory::withNetwork),
-    AGENT(MsSQLContainerFactory::withAgent),
-    WITH_SSL_CERTIFICATES(MsSQLContainerFactory::withSslCertificates),
     ;
 
     public final Consumer<MSSQLServerContainer<?>> modifier;
